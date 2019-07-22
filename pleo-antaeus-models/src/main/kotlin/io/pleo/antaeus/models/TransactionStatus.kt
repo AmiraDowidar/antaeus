@@ -5,4 +5,6 @@ enum class TransactionStatus {
     GATEWAY_REJECTED,
     FAILED,
     PROCESSOR_DECLINED,
+    CURRENCY_MISMATCH,
+    INSUFFICIENT_FUNDS
 }
