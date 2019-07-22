@@ -11,13 +11,13 @@ class BillingService(
         try {
             val paid = paymentProvider.charge(invoice)
             if (paid) {
-                return Transaction(invoice.copy(status = InvoiceStatus.PAID), true, "Success", BillStatus.AUTHORIZED)
+                return Transaction(invoice.copy(status = InvoiceStatus.PAID), true, "Success", TransactionStatus.AUTHORIZED)
             } else {
-                return Transaction(invoice, false, "Insufficient funds", BillStatus.FAILED)
+                return Transaction(invoice, false, "Insufficient funds", TransactionStatus.FAILED)
             }
         }
         catch (e: Exception) {
-            return Transaction(invoice, false, e.toString(), BillStatus.FAILED)
+            return Transaction(invoice, false, e.toString(), TransactionStatus.FAILED)
         }
     }
 }
