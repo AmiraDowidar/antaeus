@@ -106,14 +106,15 @@ class AntaeusDal(private val db: Database) {
     }
 
     // TODO: Check syntax
-    fun batchUpdateInvoices(InvoiceTable, status: InvoiceStatus = InvoiceStatus.PENDING): List<Invoice>{
-        val billedInvoices = listOf<Invoice>()
-        BatchUpdateStatement(InvoiceTable).apply {
-        billedInvoices.forEach {
-            addBatch(it.id)
-            this[InvoiceTable.status] = status
-        }
-        execute(Transaction.current())
-        }
-    }
+    // fun batchUpdateInvoices(InvoiceTable, status: InvoiceStatus = InvoiceStatus.PENDING): List<Invoice>{
+    //     val billedInvoices = listOf<Invoice>()
+    //     BatchUpdateStatement(InvoiceTable).apply {
+    //     billedInvoices.forEach {
+    //         addBatch(it.id)
+    //         this[InvoiceTable.status] = status
+    //     }
+    //     execute(Transaction.current())
+    //     }
+    //     // need to return updated invoices
+    // }
 }

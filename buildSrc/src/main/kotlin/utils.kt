@@ -30,6 +30,9 @@ fun Project.kotlinProject() {
 
         // Coroutines
         "implementation"("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1")
+
+        //JSON Parser
+        "implementation"("com.beust:klaxon:5.0.1")
     }
 }
 
