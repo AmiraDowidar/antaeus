@@ -14,6 +14,7 @@ import io.pleo.antaeus.models.InvoiceStatus
 import io.pleo.antaeus.models.Money
 import org.jetbrains.exposed.sql.Database
 import org.jetbrains.exposed.sql.insert
+import org.jetbrains.exposed.sql.update
 import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
@@ -38,12 +39,11 @@ class AntaeusDal(private val db: Database) {
         }
     }
 
-    fun fetchPendingInvoices(): List<Invoice> {
+    fun fetchInvoices(status: InvoiceStatus): List<Invoice> {
         return transaction(db) {
             InvoiceTable
-                .selectAll()
-                .filter { it.toInvoice().status == InvoiceStatus.PENDING }
-                .map { it.toInvoice() }
+                    .select { InvoiceTable.status.eq(status.name) }
+                    .map { it.toInvoice() }
         }
     }
 
@@ -60,6 +60,21 @@ class AntaeusDal(private val db: Database) {
         }
 
         return fetchInvoice(id!!)
+    }
+
+    fun updateInvoice(invoice: Invoice) : Invoice? {
+        transaction(db) {
+            //Update invoice data
+            InvoiceTable
+                    .update({ InvoiceTable.id.eq(invoice.id) }) {
+                        it[this.value] = invoice.amount.value
+                        it[this.currency] = invoice.amount.currency.name
+                        it[this.status] = invoice.status.name
+                        it[this.customerId] = invoice.customerId
+                    }
+        }
+
+        return fetchInvoice(invoice.id)
     }
 
     fun fetchCustomer(id: Int): Customer? {
@@ -88,5 +103,17 @@ class AntaeusDal(private val db: Database) {
         }
 
         return fetchCustomer(id!!)
+    }
+
+    // TODO: Check syntax
+    fun batchUpdateInvoices(InvoiceTable, status: InvoiceStatus = InvoiceStatus.PENDING): List<Invoice>{
+        val billedInvoices = listOf<Invoice>()
+        BatchUpdateStatement(InvoiceTable).apply {
+        billedInvoices.forEach {
+            addBatch(it.id)
+            this[InvoiceTable.status] = status
+        }
+        execute(Transaction.current())
+        }
     }
 }
