@@ -27,6 +27,9 @@ fun Project.kotlinProject() {
 
         // RabbitMQ
         "implementation"("com.rabbitmq:amqp-client:5.7.2")
+
+        // Coroutines
+        "implementation"("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.2.1")
     }
 }
 
