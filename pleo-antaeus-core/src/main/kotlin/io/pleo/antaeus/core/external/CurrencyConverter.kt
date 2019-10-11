@@ -24,7 +24,7 @@ class CurrencyConverter{
         val parser: Parser = Parser.default()
         val stringBuilder: StringBuilder = StringBuilder(response)
         val json: JsonObject = parser.parse(stringBuilder) as JsonObject
-        if (json.obj("error").toString() == null){
+        if (json.obj("error").toString() != null){
             throw CurrencyInvalidException(from)
         }
         val rate = json.obj("rates")!!.double(to.name)!!.toBigDecimal()
